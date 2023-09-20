@@ -1,0 +1,47 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    int n;
+    cin>>n;
+    string s = "";
+    for(int i = 0; i < n; i++){
+        int x;
+        cin>>x;
+        if(x == 1){
+            s+='(';
+        }else{
+            s+=')';
+        }
+    }
+    vector<int> openBrctIdx; // stores opening bracket indexes
+    int maxDepth = 0, maxDepthIdx = 0, maxSymbols = 0, maxSymIdx = 0;
+    
+    for(int i = 0; i < n; i++){
+        if(s[i] == '('){
+            openBrctIdx.push_back(i);
+        //   checking if the number of opening brackets are greater than maxDepth
+            if(openBrctIdx.size() > maxDepth){ // the input is always a balanced bracket sequence so there wont be any errors
+                maxDepth = openBrctIdx.size();
+            //  we want the answer in 1-based index but "i" is 0-based index so did i+1 and then stored it to maxDepthIdx
+                maxDepthIdx = i+1;
+            }
+        }else{ // closing bracket
+        /*  currently s[i] is a closing bracket, so im subtrating the closing bracket idx from the opening bracket idx to find how many brackets are in 
+            between the brackets 
+            I did a +1 cuz we want to include the current brackets too   */
+            int currSymbols = (i - openBrctIdx.back())+1;
+            if(currSymbols > maxSymbols){
+                maxSymbols = currSymbols;
+                maxSymIdx = openBrctIdx.back()+1; // did +1 for 1-based index cuz we want answer in 1-based index
+            }
+            // popped the opening bracket idx cuz if other closing brackets came then the calculation will be ruined
+            openBrctIdx.pop_back();
+        }
+    }
+    cout<<maxDepth<<" "<<maxDepthIdx<<" "<<maxSymbols<<" "<<maxSymIdx;
+    return 0;
+}
